@@ -7,9 +7,7 @@ import com.example.CAPSTONE.Services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,7 +53,18 @@ public class TransactionController {
         dto.setSeatingAreaId(ticket.getSeatingArea().getId());
         dto.setPrice(ticket.getPrice());
         dto.setPaymentDate(ticket.getPaymentDate());
+        dto.setCode(ticket.getCode());
+
         return dto;
     }
+    @GetMapping("/tickets/{userId}")
+    public ResponseEntity<List<TicketDTO>> getTicketsByUserId(@PathVariable Long userId) {
+        List<Ticket> userTickets = ticketService.getTicketsByUser(userId);
+        List<TicketDTO> ticketDTOs = userTickets.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(ticketDTOs, HttpStatus.OK);
+    }
 
-}
+    }
+

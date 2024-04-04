@@ -23,4 +23,5 @@ public class Ticket {
     private SeatingArea seatingArea;
     private BigDecimal price;
     private LocalDate paymentDate;
+    private Long code;
 }

@@ -10,6 +10,7 @@ import java.time.LocalDate;
 public class TicketDTO {
 
     private Long id;
+    private Long code;
     private Long eventId;
     private Long userId;
     private Long seatingAreaId;

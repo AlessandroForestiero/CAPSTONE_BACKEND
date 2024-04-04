@@ -1,5 +1,6 @@
 package com.example.CAPSTONE.Services;
 
+import com.example.CAPSTONE.DTO.TicketDTO;
 import com.example.CAPSTONE.Exeptions.NotFoundException;
 import com.example.CAPSTONE.Models.Event;
 import com.example.CAPSTONE.Models.SeatingArea;
@@ -24,6 +25,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class TicketService {
@@ -36,16 +38,19 @@ public class TicketService {
     @Autowired
     private SeatingAreaRepo seatingAreaRepo;
 
-    public Ticket createTicket(Long eventId, Long userId, Long seatingAreaId) {
-        Event event = eventRepo.findById(eventId).orElseThrow();
-        User user = userRepo.findById(userId).orElseThrow();
-        SeatingArea seatingArea = seatingAreaRepo.findById(seatingAreaId).orElseThrow();
+    public Ticket createTicket(TicketDTO ticketDTO) {
+        Event event = eventRepo.findById(ticketDTO.getEventId()).orElseThrow();
+        User user = userRepo.findById(ticketDTO.getUserId()).orElseThrow();
+        SeatingArea seatingArea = seatingAreaRepo.findById(ticketDTO.getSeatingAreaId()).orElseThrow();
+
         Ticket ticket = new Ticket();
         ticket.setEvent(event);
         ticket.setUser(user);
         ticket.setSeatingArea(seatingArea);
         ticket.setPrice(seatingArea.getPrice());
         ticket.setPaymentDate(LocalDate.now());
+        ticket.setCode(ticketDTO.getCode());
+
         return ticketRepo.save(ticket);
     }
 
@@ -90,5 +95,10 @@ public class TicketService {
         Ticket ticket = getById(id);
         ticketRepo.delete(ticket);
     }
+    public static Long generateRandomCode() {
+        Random random = new Random();
 
+        long code = 1000000 + random.nextInt(9000000);
+        return code;
+    }
 }

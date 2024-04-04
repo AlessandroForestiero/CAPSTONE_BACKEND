@@ -14,6 +14,10 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
+import static com.example.CAPSTONE.Services.TicketService.generateRandomCode;
+
 @Service
 public class TransactionService {
     @Autowired
@@ -54,8 +58,10 @@ public class TransactionService {
             ticket.setEvent(event);
             ticket.setUser(user);
             ticket.setSeatingArea(seatingArea);
+
             ticket.setPrice(ticketPrice);
             ticket.setPaymentDate(LocalDate.now());
+            ticket.setCode(generateRandomCode());
             ticketRepo.save(ticket);
             tickets.add(ticket);
         }
@@ -80,5 +86,10 @@ public class TransactionService {
             throw new NotFoundException("Seating area not found with ID: " + seatingAreaId);
         }
     }
+    public static Long generateRandomCode() {
+        Random random = new Random();
 
+        long code = 1000000 + random.nextInt(9000000);
+        return code;
+    }
 }
